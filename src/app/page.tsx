@@ -21,7 +21,9 @@ export default function Home() {
   const selectedExampleId = useSimulatorStore(
     (state) => state.selectedExampleId
   );
-  const setSelectedExample = useSimulatorStore((state) => state.setSelectedExample);
+  const setSelectedExample = useSimulatorStore(
+    (state) => state.setSelectedExample
+  );
   const setInputsForExample = useSimulatorStore(
     (state) => state.setInputsForExample
   );
@@ -30,7 +32,9 @@ export default function Home() {
   );
   const resetSimulation = useSimulatorStore((state) => state.resetSimulation);
   const resetPlayback = useSimulatorStore((state) => state.resetPlayback);
-  const customDefinitions = useSimulatorStore((state) => state.customDefinitions);
+  const customDefinitions = useSimulatorStore(
+    (state) => state.customDefinitions
+  );
   const removeCustomDefinition = useSimulatorStore(
     (state) => state.removeCustomDefinition
   );
@@ -67,6 +71,11 @@ export default function Home() {
     const example = examples.find((item) => item.id === exampleId);
     if (!example) return;
 
+    if (typeof setSelectedExample !== "function") {
+      console.error("setSelectedExample is not available from store");
+      return;
+    }
+
     setSelectedExample(exampleId);
     const hasInputs = example.inputs && example.inputs.length > 0;
 
@@ -77,7 +86,9 @@ export default function Home() {
     }
   };
 
-  const handleInputSubmit = (submittedInputs: Record<string, string | number>) => {
+  const handleInputSubmit = (
+    submittedInputs: Record<string, string | number>
+  ) => {
     if (selectedExampleId) {
       setInputsForExample(selectedExampleId, submittedInputs);
       resetPlayback();
@@ -90,7 +101,9 @@ export default function Home() {
       clearInputsForExample(selectedExampleId);
     }
     setShowInputDialog(false);
-    setSelectedExample(null);
+    if (typeof setSelectedExample === "function") {
+      setSelectedExample(null);
+    }
   };
 
   const handleBack = () => {
@@ -98,7 +111,9 @@ export default function Home() {
     setShowInputDialog(false);
   };
 
-  const handleCreateCustom = (definition: Parameters<typeof addCustomDefinition>[0]) => {
+  const handleCreateCustom = (
+    definition: Parameters<typeof addCustomDefinition>[0]
+  ) => {
     addCustomDefinition(definition);
   };
 
@@ -120,7 +135,9 @@ export default function Home() {
       <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-background to-muted/20 p-4 md:p-8">
         <div className="flex flex-col items-center gap-3" dir="rtl">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-          <p className="text-sm text-muted-foreground">טוען את נתוני הסימולטור...</p>
+          <p className="text-sm text-muted-foreground">
+            טוען את נתוני הסימולטור...
+          </p>
         </div>
       </div>
     );

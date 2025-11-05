@@ -54,101 +54,105 @@ export const useSimulatorStore = create<SimulatorState>()(
     (set, get) => {
       setStateRef = set;
 
-      return {
-      selectedExampleId: null,
-      inputsByExample: {},
-      currentStep: 0,
-      isPlaying: false,
-      speed: 1000,
-      isLoading: true,
-      customDefinitions: [],
-      setSelectedExample: (id) => {
-        set({ selectedExampleId: id, currentStep: 0, isPlaying: false });
-      },
-      setInputsForExample: (id, inputs) => {
-        set((state) => ({
-          inputsByExample: {
-            ...state.inputsByExample,
-            [id]: { ...inputs },
-          },
-        }));
-      },
-      clearInputsForExample: (id) => {
-        set((state) => {
-          const rest = { ...state.inputsByExample };
-          delete rest[id];
-          return { inputsByExample: rest };
-        });
-      },
-      resetPlayback: () => set({ currentStep: 0, isPlaying: false }),
-      setPlayback: (state) =>
-        set((prev) => ({
-          currentStep:
-            typeof state.currentStep === "number"
-              ? Math.max(0, state.currentStep)
-              : prev.currentStep,
-          isPlaying:
-            typeof state.isPlaying === "boolean"
-              ? state.isPlaying
-              : prev.isPlaying,
-        })),
-      setSpeed: (speed) => set({ speed }),
-      advanceStep: (maxStepIndex) =>
-        set((prev) => {
-          const safeMaxIndex = Math.max(0, maxStepIndex);
+      const actions = {
+        setSelectedExample: (id: string | null) => {
+          set({ selectedExampleId: id, currentStep: 0, isPlaying: false });
+        },
+        setInputsForExample: (id: string, inputs: Record<string, string | number>) => {
+          set((state) => ({
+            inputsByExample: {
+              ...state.inputsByExample,
+              [id]: { ...inputs },
+            },
+          }));
+        },
+        clearInputsForExample: (id: string) => {
+          set((state) => {
+            const rest = { ...state.inputsByExample };
+            delete rest[id];
+            return { inputsByExample: rest };
+          });
+        },
+        resetPlayback: () => set({ currentStep: 0, isPlaying: false }),
+        setPlayback: (state: Partial<Pick<SimulatorState, "currentStep" | "isPlaying">>) =>
+          set((prev) => ({
+            currentStep:
+              typeof state.currentStep === "number"
+                ? Math.max(0, state.currentStep)
+                : prev.currentStep,
+            isPlaying:
+              typeof state.isPlaying === "boolean"
+                ? state.isPlaying
+                : prev.isPlaying,
+          })),
+        setSpeed: (speed: number) => set({ speed }),
+        advanceStep: (maxStepIndex: number) =>
+          set((prev) => {
+            const safeMaxIndex = Math.max(0, maxStepIndex);
 
-          if (prev.currentStep >= safeMaxIndex) {
-            return { currentStep: safeMaxIndex, isPlaying: false };
-          }
+            if (prev.currentStep >= safeMaxIndex) {
+              return { currentStep: safeMaxIndex, isPlaying: false };
+            }
 
-          return { currentStep: prev.currentStep + 1 };
-        }),
-      resetSimulation: () =>
-        set({
-          selectedExampleId: null,
-          currentStep: 0,
-          isPlaying: false,
-        }),
-      addCustomDefinition: (definition) => {
-        set((state) => {
-          const exists = state.customDefinitions.some(
-            (item) => item.id === definition.id
-          );
+            return { currentStep: prev.currentStep + 1 };
+          }),
+        resetSimulation: () =>
+          set({
+            selectedExampleId: null,
+            currentStep: 0,
+            isPlaying: false,
+          }),
+        addCustomDefinition: (definition: CustomExampleDefinition) => {
+          set((state) => {
+            const exists = state.customDefinitions.some(
+              (item) => item.id === definition.id
+            );
 
-          if (exists) {
+            if (exists) {
+              return {
+                customDefinitions: state.customDefinitions.map((item) =>
+                  item.id === definition.id ? definition : item
+                ),
+              };
+            }
+
             return {
-              customDefinitions: state.customDefinitions.map((item) =>
-                item.id === definition.id ? definition : item
-              ),
+              customDefinitions: [...state.customDefinitions, definition],
             };
+          });
+        },
+        updateCustomDefinition: (definition: CustomExampleDefinition) => {
+          set((state) => ({
+            customDefinitions: state.customDefinitions.map((item) =>
+              item.id === definition.id ? definition : item
+            ),
+          }));
+        },
+        removeCustomDefinition: (id: string) => {
+          set((state) => ({
+            customDefinitions: state.customDefinitions.filter(
+              (item) => item.id !== id
+            ),
+          }));
+          const { selectedExampleId } = get();
+          if (selectedExampleId === id) {
+            set({ selectedExampleId: null, currentStep: 0, isPlaying: false });
+            get().clearInputsForExample(id);
           }
+        },
+        setIsLoading: (isLoading: boolean) => set({ isLoading }),
+      };
 
-          return {
-            customDefinitions: [...state.customDefinitions, definition],
-          };
-        });
-      },
-      updateCustomDefinition: (definition) => {
-        set((state) => ({
-          customDefinitions: state.customDefinitions.map((item) =>
-            item.id === definition.id ? definition : item
-          ),
-        }));
-      },
-      removeCustomDefinition: (id) => {
-        set((state) => ({
-          customDefinitions: state.customDefinitions.filter(
-            (item) => item.id !== id
-          ),
-        }));
-        const { selectedExampleId } = get();
-        if (selectedExampleId === id) {
-          set({ selectedExampleId: null, currentStep: 0, isPlaying: false });
-          get().clearInputsForExample(id);
-        }
-      },
-      setIsLoading: (isLoading) => set({ isLoading }),
-    };
+      return {
+        selectedExampleId: null,
+        inputsByExample: {},
+        currentStep: 0,
+        isPlaying: false,
+        speed: 1000,
+        isLoading: false,
+        customDefinitions: [],
+        ...actions,
+      };
     },
     {
       name: "simulator-store",
@@ -161,16 +165,7 @@ export const useSimulatorStore = create<SimulatorState>()(
         customDefinitions: state.customDefinitions,
         speed: state.speed,
       }),
-      onRehydrateStorage: () => {
-        setStateRef?.({ isLoading: true });
-        return (_, error) => {
-          if (error) {
-            console.error("Failed to rehydrate simulator store", error);
-          }
-
-          setStateRef?.({ isLoading: false });
-        };
-      },
+      skipHydration: false,
     }
   )
 );
