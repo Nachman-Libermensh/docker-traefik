@@ -353,15 +353,11 @@ export const switchCaseExample: CodeExample = {
     });
 
     let result = 0;
-    let caseLine = 17;
-    let calcLine = 18;
     let errorOccurred = false;
 
     switch (operation) {
       case "+":
         result = num1 + num2;
-        caseLine = 17;
-        calcLine = 18;
         allSteps.push({
           lineNumber: 17,
           description: `התאמה למקרה '+' - ביצוע חיבור`,
@@ -397,8 +393,6 @@ export const switchCaseExample: CodeExample = {
 
       case "-":
         result = num1 - num2;
-        caseLine = 20;
-        calcLine = 21;
         allSteps.push({
           lineNumber: 20,
           description: `התאמה למקרה '-' - ביצוע חיסור`,
@@ -434,8 +428,6 @@ export const switchCaseExample: CodeExample = {
 
       case "*":
         result = num1 * num2;
-        caseLine = 23;
-        calcLine = 24;
         allSteps.push({
           lineNumber: 23,
           description: `התאמה למקרה '*' - ביצוע כפל`,
@@ -470,7 +462,6 @@ export const switchCaseExample: CodeExample = {
         break;
 
       case "/":
-        caseLine = 26;
         allSteps.push({
           lineNumber: 26,
           description: `התאמה למקרה '/' - ביצוע חילוק`,
@@ -497,7 +488,6 @@ export const switchCaseExample: CodeExample = {
 
         if (num2 !== 0) {
           result = num1 / num2;
-          calcLine = 28;
           allSteps.push({
             lineNumber: 28,
             description: `חישוב: result = ${num1} / ${num2} = ${result.toFixed(
