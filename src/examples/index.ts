@@ -5,6 +5,8 @@ import { numberClassifierExample } from "./number-classifier";
 import { sumEvenNumbersExample } from "./sum-even-numbers";
 import { factorialExample } from "./factorial";
 import { primeNumberExample } from "./prime-number";
+import { ifTypesComparisonExample } from "./if-types-comparison";
+import { switchCaseExample } from "./switch-case";
 
 export const builtInExamples: CodeExample[] = [
   currencyConverterExample,
@@ -13,6 +15,8 @@ export const builtInExamples: CodeExample[] = [
   sumEvenNumbersExample,
   testAverageExample,
   primeNumberExample,
+  ifTypesComparisonExample,
+  switchCaseExample,
 ];
 
 export const getAllExamples = (
