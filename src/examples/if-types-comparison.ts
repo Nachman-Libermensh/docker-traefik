@@ -199,7 +199,6 @@ export const ifTypesComparisonExample: CodeExample = {
 
     // Determine grade letter
     if (grade >= 90) {
-
       allSteps.push({
         lineNumber: 10,
         description: `בדיקה: ${grade} >= 90 - אמת!`,
@@ -214,7 +213,6 @@ export const ifTypesComparisonExample: CodeExample = {
         highlight: "grade",
       });
     } else if (grade >= 80) {
-
       allSteps.push({
         lineNumber: 10,
         description: `בדיקה: ${grade} >= 90 - שקר`,
@@ -235,7 +233,6 @@ export const ifTypesComparisonExample: CodeExample = {
         highlight: "grade",
       });
     } else if (grade >= 70) {
-
       allSteps.push({
         lineNumber: 10,
         description: `בדיקה: ${grade} >= 90 - שקר`,
@@ -262,7 +259,6 @@ export const ifTypesComparisonExample: CodeExample = {
         highlight: "grade",
       });
     } else if (grade >= 60) {
-
       allSteps.push({
         lineNumber: 10,
         description: `בדיקה: ${grade} >= 90 - שקר`,
@@ -295,7 +291,6 @@ export const ifTypesComparisonExample: CodeExample = {
         highlight: "grade",
       });
     } else {
-
       allSteps.push({
         lineNumber: 10,
         description: `בדיקה: ${grade} >= 90 - שקר`,

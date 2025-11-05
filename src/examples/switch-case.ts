@@ -484,7 +484,9 @@ export const switchCaseExample: CodeExample = {
 
         allSteps.push({
           lineNumber: 27,
-          description: `בדיקה: ${num2} != 0 - ${num2 !== 0 ? "אמת (בטוח לחלק)" : "שקר (חלוקה באפס!)"}`,
+          description: `בדיקה: ${num2} != 0 - ${
+            num2 !== 0 ? "אמת (בטוח לחלק)" : "שקר (חלוקה באפס!)"
+          }`,
           variables: [
             { name: "num1", type: "float", value: num1 },
             { name: "num2", type: "float", value: num2 },
@@ -498,7 +500,9 @@ export const switchCaseExample: CodeExample = {
           calcLine = 28;
           allSteps.push({
             lineNumber: 28,
-            description: `חישוב: result = ${num1} / ${num2} = ${result.toFixed(2)}`,
+            description: `חישוב: result = ${num1} / ${num2} = ${result.toFixed(
+              2
+            )}`,
             variables: [
               { name: "num1", type: "float", value: num1 },
               { name: "num2", type: "float", value: num2 },
