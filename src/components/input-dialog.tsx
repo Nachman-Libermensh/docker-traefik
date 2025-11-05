@@ -148,7 +148,7 @@ export function InputDialog({
               type="button"
               variant="outline"
               onClick={onCancel}
-              className="h-12 px-8 font-medium hover:bg-muted transition-colors"
+              className="h-12 px-8 font-medium transition-colors"
             >
               ביטול
             </Button>

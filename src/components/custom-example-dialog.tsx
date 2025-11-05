@@ -878,7 +878,7 @@ export function CustomExampleDialog({
             <Button
               type="button"
               variant="outline"
-              className="flex-1 sm:flex-none h-12 px-8 font-medium text-base hover:bg-muted transition-colors"
+              className="flex-1 sm:flex-none h-12 px-8 font-medium text-base  transition-colors"
               onClick={() => handleClose(false)}
             >
               ביטול

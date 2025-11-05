@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CodeExample } from "@/types/code-demo";
 import { motion } from "framer-motion";
-import { Code2, ArrowRight, Plus, Trash2 } from "lucide-react";
+import { Code2, ArrowRight, Plus, Trash2, ArrowLeft } from "lucide-react";
 
 interface ExampleSelectorProps {
   examples: CodeExample[];
@@ -167,7 +167,7 @@ export function ExampleSelector({
                       }}
                     >
                       <span className="font-medium">התחל</span>
-                      <ArrowRight className="h-4 w-4" />
+                      <ArrowLeft className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
