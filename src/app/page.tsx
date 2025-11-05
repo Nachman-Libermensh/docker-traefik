@@ -22,6 +22,7 @@ export default function Home() {
     setInputsForExample,
     clearInputsForExample,
     resetSimulation,
+    resetPlayback,
     customDefinitions,
     removeCustomDefinition,
     addCustomDefinition,
@@ -32,6 +33,7 @@ export default function Home() {
     setInputsForExample: state.setInputsForExample,
     clearInputsForExample: state.clearInputsForExample,
     resetSimulation: state.resetSimulation,
+    resetPlayback: state.resetPlayback,
     customDefinitions: state.customDefinitions,
     removeCustomDefinition: state.removeCustomDefinition,
     addCustomDefinition: state.addCustomDefinition,
@@ -78,6 +80,7 @@ export default function Home() {
   const handleInputSubmit = (submittedInputs: Record<string, string | number>) => {
     if (selectedExampleId) {
       setInputsForExample(selectedExampleId, submittedInputs);
+      resetPlayback();
     }
     setShowInputDialog(false);
   };

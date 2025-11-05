@@ -75,10 +75,6 @@ export function CodeVisualizer({ example, inputs = {} }: CodeVisualizerProps) {
   const totalSteps = example.totalSteps;
 
   useEffect(() => {
-    resetPlayback();
-  }, [example.id, memoInputs, resetPlayback]);
-
-  useEffect(() => {
     if (!isPlaying) return;
 
     const interval = setInterval(() => {
