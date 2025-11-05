@@ -239,7 +239,9 @@ export const factorialExample: CodeExample = {
     // Final loop check (exit)
     allSteps.push({
       lineNumber: 11,
-      description: `בדיקת תנאי הלולאה: i (${number + 1}) <= number (${number}) - שקר, יוצאים מהלולאה`,
+      description: `בדיקת תנאי הלולאה: i (${
+        number + 1
+      }) <= number (${number}) - שקר, יוצאים מהלולאה`,
       variables: [
         { name: "number", type: "int", value: number },
         { name: "result", type: "int", value: finalResult },

@@ -127,7 +127,10 @@ export function CodeVisualizer({ example, inputs = {} }: CodeVisualizerProps) {
   const escapeRegExp = (value: string) =>
     value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-  const getVariablesForLine = (lineNumber: number, code: string): Variable[] => {
+  const getVariablesForLine = (
+    lineNumber: number,
+    code: string
+  ): Variable[] => {
     const variables = variablesByLineNumber.get(lineNumber) ?? [];
     if (!code) return [];
 
@@ -373,34 +376,34 @@ export function CodeVisualizer({ example, inputs = {} }: CodeVisualizerProps) {
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="flex gap-2">
             <Button
-              size="sm"
+              size="lg"
               variant={isPlaying ? "default" : "outline"}
               onClick={handleTogglePlay}
             >
               {isPlaying ? (
-                <Pause className="h-4 w-4" />
+                <Pause className="h-5 w-5" />
               ) : (
-                <Play className="h-4 w-4" />
+                <Play className="h-5 w-5" />
               )}
             </Button>
             <Button
-              size="sm"
+              size="lg"
               variant="outline"
               onClick={handlePrevious}
               disabled={currentStep === 0}
             >
-              <Rewind className="h-4 w-4" />
+              <Rewind className="h-5 w-5" />
             </Button>
             <Button
-              size="sm"
+              size="lg"
               variant="outline"
               onClick={handleNext}
               disabled={currentStep >= totalSteps - 1}
             >
-              <SkipForward className="h-4 w-4" />
+              <SkipForward className="h-5 w-5" />
             </Button>
-            <Button size="sm" variant="outline" onClick={handleReset}>
-              <RotateCcw className="h-4 w-4" />
+            <Button size="lg" variant="outline" onClick={handleReset}>
+              <RotateCcw className="h-5 w-5" />
             </Button>
           </div>
           <div className="flex items-center gap-3">
@@ -436,7 +439,7 @@ export function CodeVisualizer({ example, inputs = {} }: CodeVisualizerProps) {
         {/* Code Panel */}
         <Card className="lg:col-span-2 p-4">
           <h3 className="text-lg font-semibold mb-4">קוד התוכנית</h3>
-          <div className="space-y-1 font-mono text-sm" dir="ltr">
+          <div className="space-y-1 font-mono  text-sm text-left" dir="ltr">
             {example.code.map((line) => {
               const isActive = line.lineNumber === executionState.lineNumber;
               const hasExplanation =
@@ -638,8 +641,8 @@ export function CodeVisualizer({ example, inputs = {} }: CodeVisualizerProps) {
               {executionState.description}
             </motion.p>
           </Card>
+        </div>
       </div>
-    </div>
 
       <AlertDialog
         open={Boolean(activeInputPrompt)}

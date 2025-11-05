@@ -291,7 +291,9 @@ export const primeNumberExample: CodeExample = {
         const isDivisor = number % i === 0;
         allSteps.push({
           lineNumber: 15,
-          description: `בדיקה: ${number} % ${i} == 0 - ${isDivisor ? "אמת (מצאנו מחלק!)" : "שקר"}`,
+          description: `בדיקה: ${number} % ${i} == 0 - ${
+            isDivisor ? "אמת (מצאנו מחלק!)" : "שקר"
+          }`,
           variables: [
             { name: "number", type: "int", value: number },
             { name: "i", type: "int", value: i },
@@ -368,7 +370,11 @@ export const primeNumberExample: CodeExample = {
       description: `הדפסת התוצאה`,
       variables: [
         { name: "number", type: "int", value: number },
-        { name: "i", type: "int", value: number > 1 ? Math.floor(number / 2) + 1 : null },
+        {
+          name: "i",
+          type: "int",
+          value: number > 1 ? Math.floor(number / 2) + 1 : null,
+        },
         { name: "isPrime", type: "int", value: isPrime },
       ],
       output: isPrime
