@@ -31,13 +31,13 @@ import {
   CodeExample,
   ExecutionStep,
   StepInputRequest,
+  Variable,
 } from "@/types/code-demo";
 import { useSimulatorStore } from "@/store/simulator";
 import { useShallow } from "zustand/react/shallow";
 import {
   AlertDialog,
   AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
@@ -105,6 +105,33 @@ export function CodeVisualizer({ example, inputs = {} }: CodeVisualizerProps) {
   }, [currentStep, example, memoInputs]);
 
   const executionState = history[Math.min(currentStep, history.length - 1)];
+
+  const variablesByLineNumber = useMemo(() => {
+    const map = new Map<number, Variable[]>();
+    history.forEach((step) => {
+      map.set(step.lineNumber, step.variables);
+    });
+    return map;
+  }, [history]);
+
+  const escapeRegExp = (value: string) =>
+    value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+  const getVariablesForLine = (lineNumber: number, code: string): Variable[] => {
+    const variables = variablesByLineNumber.get(lineNumber) ?? [];
+    if (!code) return [];
+
+    const sanitizedCode = code.replace(/".*?"|'.*?'/g, " ");
+
+    return variables.filter((variable) => {
+      if (!variable.name) {
+        return false;
+      }
+
+      const pattern = new RegExp(`\\b${escapeRegExp(variable.name)}\\b`);
+      return pattern.test(sanitizedCode);
+    });
+  };
 
   const outputs = useMemo(
     () =>
@@ -231,7 +258,7 @@ export function CodeVisualizer({ example, inputs = {} }: CodeVisualizerProps) {
     };
   };
 
-  const handleConfirmInput = () => {
+  const handleSubmitInput = (resumePlayback: boolean) => {
     if (!activeInputPrompt) return;
 
     const { request, value, wasPlaying, stepIndex } = activeInputPrompt;
@@ -244,8 +271,13 @@ export function CodeVisualizer({ example, inputs = {} }: CodeVisualizerProps) {
     handledInputSteps.current.add(stepIndex);
     setActiveInputPrompt(null);
 
-    if (wasPlaying) {
+    if (resumePlayback) {
       setPlayback({ isPlaying: true });
+      return;
+    }
+
+    if (wasPlaying) {
+      setPlayback({ isPlaying: false });
     }
   };
 
@@ -263,6 +295,7 @@ export function CodeVisualizer({ example, inputs = {} }: CodeVisualizerProps) {
   };
 
   const currentInputPrompt = activeInputPrompt?.request;
+  const hasInputValue = Boolean(activeInputPrompt?.value?.trim());
 
   const getCategoryColor = (category?: string) => {
     switch (category) {
@@ -384,6 +417,12 @@ export function CodeVisualizer({ example, inputs = {} }: CodeVisualizerProps) {
               const isActive = line.lineNumber === executionState.lineNumber;
               const hasExplanation =
                 line.explanation && line.explanation.length > 0;
+              const variablesForLine = getVariablesForLine(
+                line.lineNumber,
+                line.code ?? ""
+              );
+              const shouldShowHoverCard =
+                hasExplanation || variablesForLine.length > 0;
 
               return (
                 <motion.div
@@ -399,7 +438,7 @@ export function CodeVisualizer({ example, inputs = {} }: CodeVisualizerProps) {
                   <span className="text-muted-foreground w-8 text-right select-none">
                     {line.lineNumber}
                   </span>
-                  {hasExplanation ? (
+                  {shouldShowHoverCard ? (
                     <HoverCard>
                       <HoverCardTrigger asChild>
                         <code
@@ -411,22 +450,52 @@ export function CodeVisualizer({ example, inputs = {} }: CodeVisualizerProps) {
                           {line.code || " "}
                         </code>
                       </HoverCardTrigger>
-                      <HoverCardContent className="w-80" dir="rtl">
-                        <div className="space-y-2">
-                          <h4 className="text-sm font-semibold">הסבר</h4>
-                          <p className="text-sm text-muted-foreground">
-                            {line.explanation}
-                          </p>
-                          {line.category && (
-                            <Badge variant="outline" className="text-xs">
-                              {line.category}
-                            </Badge>
-                          )}
-                        </div>
+                      <HoverCardContent className="w-80 space-y-3" dir="rtl">
+                        {hasExplanation && (
+                          <div className="space-y-2">
+                            <h4 className="text-sm font-semibold">הסבר</h4>
+                            <p className="text-sm text-muted-foreground">
+                              {line.explanation}
+                            </p>
+                            {line.category && (
+                              <Badge variant="outline" className="text-xs">
+                                {line.category}
+                              </Badge>
+                            )}
+                          </div>
+                        )}
+                        {variablesForLine.length > 0 && (
+                          <div className="space-y-2">
+                            <h4 className="text-sm font-semibold">
+                              ערכי משתנים בשורה זו
+                            </h4>
+                            <ul className="space-y-1 text-xs">
+                              {variablesForLine.map((variable) => (
+                                <li
+                                  key={variable.name}
+                                  className="flex items-center justify-between gap-2"
+                                >
+                                  <span className="font-mono text-sm">
+                                    {variable.name}
+                                  </span>
+                                  <span className="text-sm">
+                                    {variable.value !== null
+                                      ? String(variable.value)
+                                      : "לא מאותחל"}
+                                  </span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
                       </HoverCardContent>
                     </HoverCard>
                   ) : (
-                    <code className="flex-1">{line.code || " "}</code>
+                    <code
+                      className={cn("flex-1", getCategoryColor(line.category))}
+                    >
+                      {line.code || " "}
+                    </code>
                   )}
                 </motion.div>
               );
@@ -593,14 +662,21 @@ export function CodeVisualizer({ example, inputs = {} }: CodeVisualizerProps) {
             )}
           </div>
 
-          <AlertDialogFooter className="flex gap-2 justify-end">
-            <AlertDialogCancel asChild>
-              <Button variant="outline" onClick={handleCancelInput}>
-                ביטול
-              </Button>
-            </AlertDialogCancel>
+          <AlertDialogFooter className="flex flex-col gap-2 sm:flex-row sm:justify-end">
+            <Button
+              variant="outline"
+              disabled={!hasInputValue}
+              onClick={() => handleSubmitInput(false)}
+            >
+              הכנס קלט זה והשהה את התוכנית
+            </Button>
             <AlertDialogAction asChild>
-              <Button onClick={handleConfirmInput}>שמירת קלט</Button>
+              <Button
+                disabled={!hasInputValue}
+                onClick={() => handleSubmitInput(true)}
+              >
+                הכנס קלט זה והמשך
+              </Button>
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
