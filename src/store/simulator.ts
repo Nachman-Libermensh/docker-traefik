@@ -20,7 +20,9 @@ interface SimulatorState {
   ) => void;
   clearInputsForExample: (id: string) => void;
   resetPlayback: () => void;
-  setPlayback: (state: Partial<Pick<SimulatorState, "currentStep" | "isPlaying">>) => void;
+  setPlayback: (
+    state: Partial<Pick<SimulatorState, "currentStep" | "isPlaying">>
+  ) => void;
   setSpeed: (speed: number) => void;
   resetSimulation: () => void;
   addCustomDefinition: (definition: CustomExampleDefinition) => void;
@@ -152,7 +154,9 @@ export const useSimulatorStore = create<SimulatorState>()(
   )
 );
 
-export const getInputsForExample = (id: string): Record<string, string | number> => {
+export const getInputsForExample = (
+  id: string
+): Record<string, string | number> => {
   const store = useSimulatorStore.getState();
   return store.inputsByExample[id] ?? {};
 };

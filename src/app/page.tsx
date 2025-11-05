@@ -103,7 +103,12 @@ export default function Home() {
     }
     setShowInputDialog(false);
     setSelectedExample(null);
-  }, [clearInputsForExample, selectedExampleId, setSelectedExample, setShowInputDialog]);
+  }, [
+    clearInputsForExample,
+    selectedExampleId,
+    setSelectedExample,
+    setShowInputDialog,
+  ]);
 
   const handleBack = useCallback(() => {
     resetSimulation();
@@ -138,7 +143,9 @@ export default function Home() {
         {isLoading ? (
           <div className="flex flex-col items-center justify-center gap-4 py-24">
             <Spinner className="h-10 w-10 text-primary" />
-            <p className="text-sm text-muted-foreground">טוען נתונים שמורים...</p>
+            <p className="text-sm text-muted-foreground">
+              טוען נתונים שמורים...
+            </p>
           </div>
         ) : !selectedExample ? (
           <ExampleSelector
