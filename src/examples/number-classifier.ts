@@ -165,7 +165,9 @@ export const numberClassifierExample: CodeExample = {
       },
       {
         lineNumber: 9,
-        description: `בדיקת תנאי: ${number} > 0 - ${isPositive ? "אמת" : "שקר"}`,
+        description: `בדיקת תנאי: ${number} > 0 - ${
+          isPositive ? "אמת" : "שקר"
+        }`,
         variables: [{ name: "number", type: "int", value: number }],
       },
       ...(isPositive
@@ -173,37 +175,47 @@ export const numberClassifierExample: CodeExample = {
             {
               lineNumber: 10,
               description: "התנאי התקיים - המספר חיובי",
-              variables: [{ name: "number", type: "int" as const, value: number }],
+              variables: [
+                { name: "number", type: "int" as const, value: number },
+              ],
               output: `המספר ${number} הוא חיובי`,
             },
           ] as ExecutionStep[])
         : isNegative
-          ? ([
-              {
-                lineNumber: 11,
-                description: `בדיקת תנאי else-if: ${number} < 0 - אמת`,
-                variables: [{ name: "number", type: "int" as const, value: number }],
-              },
-              {
-                lineNumber: 12,
-                description: "התנאי התקיים - המספר שלילי",
-                variables: [{ name: "number", type: "int" as const, value: number }],
-                output: `המספר ${number} הוא שלילי`,
-              },
-            ] as ExecutionStep[])
-          : ([
-              {
-                lineNumber: 13,
-                description: "הגענו ל-else - המספר הוא אפס",
-                variables: [{ name: "number", type: "int" as const, value: number }],
-              },
-              {
-                lineNumber: 14,
-                description: "הדפסה: המספר הוא אפס",
-                variables: [{ name: "number", type: "int" as const, value: number }],
-                output: "המספר הוא אפס",
-              },
-            ] as ExecutionStep[])),
+        ? ([
+            {
+              lineNumber: 11,
+              description: `בדיקת תנאי else-if: ${number} < 0 - אמת`,
+              variables: [
+                { name: "number", type: "int" as const, value: number },
+              ],
+            },
+            {
+              lineNumber: 12,
+              description: "התנאי התקיים - המספר שלילי",
+              variables: [
+                { name: "number", type: "int" as const, value: number },
+              ],
+              output: `המספר ${number} הוא שלילי`,
+            },
+          ] as ExecutionStep[])
+        : ([
+            {
+              lineNumber: 13,
+              description: "הגענו ל-else - המספר הוא אפס",
+              variables: [
+                { name: "number", type: "int" as const, value: number },
+              ],
+            },
+            {
+              lineNumber: 14,
+              description: "הדפסה: המספר הוא אפס",
+              variables: [
+                { name: "number", type: "int" as const, value: number },
+              ],
+              output: "המספר הוא אפס",
+            },
+          ] as ExecutionStep[])),
       {
         lineNumber: 17,
         description: "סיום התוכנית בהצלחה",

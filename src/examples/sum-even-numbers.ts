@@ -134,24 +134,24 @@ export const sumEvenNumbersExample: CodeExample = {
     inputs?: Record<string, string | number>
   ): ExecutionStep | undefined => {
     const n = Number(inputs?.n ?? 10);
-    
+
     // Build all steps
     const allSteps: ExecutionStep[] = [];
-    
+
     // Initial steps
     allSteps.push({
       lineNumber: 3,
       description: "התוכנית מתחילה לרוץ",
       variables: [],
     });
-    
+
     allSteps.push({
       lineNumber: 4,
       description: "הצהרה על משתנה n",
       variables: [{ name: "n", type: "int", value: null }],
       highlight: "n",
     });
-    
+
     allSteps.push({
       lineNumber: 5,
       description: "הצהרה ואתחול של sum ל-0",
@@ -161,7 +161,7 @@ export const sumEvenNumbersExample: CodeExample = {
       ],
       highlight: "sum",
     });
-    
+
     allSteps.push({
       lineNumber: 6,
       description: "הצהרה על משתנה i למונה הלולאה",
@@ -172,7 +172,7 @@ export const sumEvenNumbersExample: CodeExample = {
       ],
       highlight: "i",
     });
-    
+
     allSteps.push({
       lineNumber: 9,
       description: `קליטת הערך ${n} למשתנה n`,
@@ -197,11 +197,11 @@ export const sumEvenNumbersExample: CodeExample = {
         },
       },
     });
-    
+
     // Loop iterations - show only a few representative steps
     let sum = 0;
     const stepsToShow = Math.min(n, 5); // Show max 5 iterations
-    
+
     for (let i = 1; i <= stepsToShow; i++) {
       // Check condition
       allSteps.push({
@@ -213,20 +213,22 @@ export const sumEvenNumbersExample: CodeExample = {
           { name: "i", type: "int", value: i },
         ],
       });
-      
+
       const isEven = i % 2 === 0;
-      
+
       // Check if even
       allSteps.push({
         lineNumber: 12,
-        description: `בדיקה: ${i} % 2 == 0 - ${isEven ? `אמת (${i} זוגי)` : `שקר (${i} אי-זוגי)`}`,
+        description: `בדיקה: ${i} % 2 == 0 - ${
+          isEven ? `אמת (${i} זוגי)` : `שקר (${i} אי-זוגי)`
+        }`,
         variables: [
           { name: "n", type: "int", value: n },
           { name: "sum", type: "int", value: sum },
           { name: "i", type: "int", value: i },
         ],
       });
-      
+
       if (isEven) {
         const oldSum = sum;
         sum += i;
@@ -242,7 +244,7 @@ export const sumEvenNumbersExample: CodeExample = {
         });
       }
     }
-    
+
     // Calculate final sum for output (in case we skipped iterations)
     let finalSum = 0;
     for (let i = 1; i <= n; i++) {
@@ -250,7 +252,7 @@ export const sumEvenNumbersExample: CodeExample = {
         finalSum += i;
       }
     }
-    
+
     // Skip to end if needed
     if (n > stepsToShow) {
       allSteps.push({
@@ -263,18 +265,20 @@ export const sumEvenNumbersExample: CodeExample = {
         ],
       });
     }
-    
+
     // Exit condition
     allSteps.push({
       lineNumber: 11,
-      description: `בדיקת תנאי הלולאה: i (${n + 1}) <= n (${n}) - שקר, יוצאים מהלולאה`,
+      description: `בדיקת תנאי הלולאה: i (${
+        n + 1
+      }) <= n (${n}) - שקר, יוצאים מהלולאה`,
       variables: [
         { name: "n", type: "int", value: n },
         { name: "sum", type: "int", value: finalSum },
         { name: "i", type: "int", value: n + 1 },
       ],
     });
-    
+
     // Final output
     allSteps.push({
       lineNumber: 17,
@@ -286,7 +290,7 @@ export const sumEvenNumbersExample: CodeExample = {
       ],
       output: `סכום הזוגיים: ${finalSum}`,
     });
-    
+
     return allSteps[stepIndex];
   },
 };
